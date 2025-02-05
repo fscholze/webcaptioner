@@ -9,7 +9,7 @@ RUN mkdir -p /application/src
 
 COPY public /application/public
 COPY src    /application/src
-COPY package.json package-lock.json tsconfig.json /application
+COPY package.json package-lock.json tsconfig.json /application/
 
 RUN cd application && npm install
 
