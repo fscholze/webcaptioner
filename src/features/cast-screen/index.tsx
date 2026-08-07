@@ -28,6 +28,7 @@ import {
 } from '../../hooks/useAdaptiveTtsSpeed'
 import { isTranslationTooWrong } from '../../helper/translation-quality'
 import { reducePartialText } from '../../helper/partial-transcript'
+import { FRONTEND_WEBCAPTIONER_SERVER } from "../../config";
 
 const CastScreen = () => {
   const { token: urlToken } = useParams<{ token: string }>()
@@ -445,7 +446,7 @@ const CastScreen = () => {
             wsRef.current.close()
           }
 
-          const wsUrl = `${process.env.REACT_APP_WEBCAPTIONER_SERVER?.replace(
+          const wsUrl = `${FRONTEND_WEBCAPTIONER_SERVER?.replace(
             'http',
             'ws',
           )}/translations?recordId=${response.data._id}`

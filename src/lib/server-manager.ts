@@ -4,6 +4,7 @@ import type { TranscriptLine } from '../types/transcript'
 import { DEFAULT_AUDIO_FORMAT, DEFAULT_SAMPLE_RATE } from '../constants/audio'
 import { TranslationTargetLanguage } from '../constants/translation'
 import { LibreTranslateTargetLanguage } from '../constants/libretranslate'
+import { FRONTEND_WEBCAPTIONER_SERVER,FRONTEND_YOUTUBE_REGION } from "../config";
 
 export const getTranslation = async (
   audioRecordId: string | undefined,
@@ -21,7 +22,7 @@ export const getTranslation = async (
     targetLanguage: targetLanguage,
     audioRecordId: audioRecordId,
   })
-  const url = `${process.env.REACT_APP_WEBCAPTIONER_SERVER}/sotra`
+  const url = `${FRONTEND_WEBCAPTIONER_SERVER}/sotra`
   const config = {
     maxBodyLength: Infinity,
     headers: {
@@ -34,7 +35,7 @@ export const getTranslation = async (
   return axios.post<SotraResponse>(url, data, config)
 }
 
-const region = process.env.REACT_APP_YOUTUBE_REGION
+const region = FRONTEND_YOUTUBE_REGION
 
 export const getParseDataForYoutube = async (
   seq: number,
@@ -53,7 +54,7 @@ export const getParseDataForYoutube = async (
   const config = {
     method: 'post',
     maxBodyLength: Infinity,
-    url: `${process.env.REACT_APP_WEBCAPTIONER_SERVER}/youtube`,
+    url: `${FRONTEND_WEBCAPTIONER_SERVER}/youtube`,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -100,7 +101,7 @@ export const getAudioFromText = async (
     format: DEFAULT_AUDIO_FORMAT,
     speed: speed,
   })
-  const url = `${process.env.REACT_APP_WEBCAPTIONER_SERVER}/bamborak`
+  const url = `${FRONTEND_WEBCAPTIONER_SERVER}/bamborak`
   const config = {
     maxBodyLength: Infinity,
     headers: {
@@ -115,7 +116,7 @@ export const getAudioFromText = async (
 }
 
 export const getSpeakersFromBamborak = async () => {
-  const url = `${process.env.REACT_APP_WEBCAPTIONER_SERVER}/bamborak-speakers`
+  const url = `${FRONTEND_WEBCAPTIONER_SERVER}/bamborak-speakers`
   return axios.get(url)
 }
 

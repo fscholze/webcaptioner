@@ -14,6 +14,7 @@ import type {
 } from '../features/main-screen/types'
 import type { YoutubeSettings } from '../features/main-screen/types'
 import { useRecording } from '../features/main-screen/hooks/useRecording'
+import { FRONTEND_DEFAULT_YOUTUBE_TIME_OFFSET } from "../config";
 
 type RecordRef = { id: string; token: string }
 
@@ -69,7 +70,7 @@ export const RecordingSessionProvider = ({
   const [youtubeSettings, setYoutubeSettings] = useState<YoutubeSettings>({
     streamingKey: undefined,
     timeOffset: parseInt(
-      process.env.REACT_APP_DEFAULT_YOUTUBE_TIME_OFFSET ?? '8',
+      FRONTEND_DEFAULT_YOUTUBE_TIME_OFFSET ?? '8',
     ),
     counter: 0,
   })

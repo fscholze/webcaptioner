@@ -31,6 +31,7 @@ import {
   enqueuePendingTranslationTokens,
 } from '../../../helper/translation-token-sync'
 import { reducePartialText } from '../../../helper/partial-transcript'
+import { FRONTEND_WEBCAPTIONER_SERVER } from "../../../config";
 
 const shouldIgnoreTranscriptionText = (plainText: string): boolean => {
   const t = plainText.trim()
@@ -511,8 +512,7 @@ export const useRecording = (
       }
 
       webSocketRef.current = initWebsocket(
-        `${process.env
-          .REACT_APP_WEBCAPTIONER_SERVER!}/vosk?recordId=${recordId}`,
+        `${FRONTEND_WEBCAPTIONER_SERVER!}/vosk?recordId=${recordId}`,
         e => onReceiveMessage(e, recordId),
       )
 
@@ -527,7 +527,7 @@ export const useRecording = (
 
         translationsWsRecordIdRef.current = recordId
 
-        const wsUrl = `${process.env.REACT_APP_WEBCAPTIONER_SERVER?.replace(
+        const wsUrl = `${FRONTEND_WEBCAPTIONER_SERVER?.replace(
           'http',
           'ws',
         )}/translations?recordId=${recordId}`

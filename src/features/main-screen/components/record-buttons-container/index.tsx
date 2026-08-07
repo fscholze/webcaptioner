@@ -13,6 +13,7 @@ import { SettingsContainer } from './settings-container'
 import { YoutubeContainer, YoutubeSettings } from './youtube-container'
 import { Settings } from '../../../../types/settings'
 import { useTheme } from '../../../../contexts/theme-context'
+import { FRONTEND_RECORDING_INFORMATION_LINE } from "../../../../config";
 
 export const RecordButtonsContainer: FC<{
   voskResponse: boolean
@@ -194,7 +195,7 @@ export const RecordButtonsContainer: FC<{
         {visualizerArea}
       </Box>
       <Typography variant='caption'>
-        {process.env.REACT_APP_RECORDING_INFORMATION_LINE}
+        {FRONTEND_RECORDING_INFORMATION_LINE}
       </Typography>
       <Box>
         <Button

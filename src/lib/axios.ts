@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { localStorage } from './local-storage'
+import { FRONTEND_WEBCAPTIONER_SERVER } from "../config";
 
-const BASE_URL = `${process.env.REACT_APP_WEBCAPTIONER_SERVER}`
+const BASE_URL = `${FRONTEND_WEBCAPTIONER_SERVER}`
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,

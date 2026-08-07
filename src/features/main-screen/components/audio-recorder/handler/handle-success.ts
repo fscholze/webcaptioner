@@ -1,5 +1,6 @@
 import { toast } from 'sonner'
 import { VoskSendConfigService } from '../../../../../lib/vosk-config-service'
+import { FRONTEND_SEND_TIMESTAMP,FRONTEND_SEND_TIMESTAMP_COUNT } from "../../../../../config";
 
 export const handleSuccess = (
   stream: MediaStream,
@@ -40,10 +41,10 @@ export const handleSuccess = (
       processor.port.onmessage = event => {
         if (webSocket.readyState === webSocket.OPEN) {
           webSocket.send(event.data)
-          if (process.env.REACT_APP_SEND_TIMESTAMP === 'true') {
+          if (FRONTEND_SEND_TIMESTAMP === 'true') {
             count += 1
             if (
-              count > parseInt(process.env.REACT_APP_SEND_TIMESTAMP_COUNT!, 10)
+              count > parseInt(FRONTEND_SEND_TIMESTAMP_COUNT!, 10)
             ) {
               VoskSendConfigService.sendClientTimestamp(
                 webSocket,

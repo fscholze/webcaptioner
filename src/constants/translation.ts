@@ -1,12 +1,14 @@
 // src/constants/translation.ts
+import { FRONTEND_DEFAULT_TRANSLATION_TARGET_LANGUAGE } from "../config";
 
 export const TRANSLATION_TARGET_LANGUAGES = ['hsb', 'de', 'dsb', 'cs'] as const
 
 export type TranslationTargetLanguage =
   (typeof TRANSLATION_TARGET_LANGUAGES)[number]
 
-export const DEFAULT_FALLBACK_TRANSLATION_TARGET_LANGUAGE: TranslationTargetLanguage =
-  'hsb'
+// export const FRONTEND_DEFAULT_TRANSLATION_TARGET_LANGUAGE: TranslationTargetLanguage =
+//  'hsb'
+const DEFAULT_FALLBACK_TRANSLATION_TARGET_LANGUAGE = 'de'
 
 export function isTranslationTargetLanguage(
   value: string,
@@ -21,8 +23,8 @@ export function parseTranslationTargetLanguageOrDefault(
 ): TranslationTargetLanguage {
   if (!value) {
     console.warn(
-      `Missing REACT_APP_DEFAULT_TRANSLATION_TARGET_LANGUAGE. ` +
-        `Using default "${DEFAULT_FALLBACK_TRANSLATION_TARGET_LANGUAGE}".`,
+      `Missing FRONTEND_DEFAULT_TRANSLATION_TARGET_LANGUAGE. ` +
+        `Using default "${FRONTEND_DEFAULT_TRANSLATION_TARGET_LANGUAGE}".`,
     )
 
     return DEFAULT_FALLBACK_TRANSLATION_TARGET_LANGUAGE
@@ -30,9 +32,9 @@ export function parseTranslationTargetLanguageOrDefault(
 
   if (!isTranslationTargetLanguage(value)) {
     console.warn(
-      `Invalid REACT_APP_DEFAULT_TRANSLATION_TARGET_LANGUAGE: "${value}". ` +
+      `Invalid FRONTEND_DEFAULT_TRANSLATION_TARGET_LANGUAGE: "${value}". ` +
         `Allowed values are: ${TRANSLATION_TARGET_LANGUAGES.join(', ')}. ` +
-        `Using default "${DEFAULT_FALLBACK_TRANSLATION_TARGET_LANGUAGE}".`,
+        `Using default "${FRONTEND_DEFAULT_TRANSLATION_TARGET_LANGUAGE}".`,
     )
 
     return DEFAULT_FALLBACK_TRANSLATION_TARGET_LANGUAGE
