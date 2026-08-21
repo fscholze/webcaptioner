@@ -2,7 +2,7 @@
 
 set -e
 
-cat <<EOF > /usr/share/nginx/html/runtime-config.js
+cat <<EOF > /usr/share/nginx/html/config/runtime-config.js
 window.RUNTIME_CONFIG = {
   FRONTEND_WEBCAPTIONER_SERVER:                  "${FRONTEND_WEBCAPTIONER_SERVER}",
   FRONTEND_YOUTUBE_REGION:                       "${FRONTEND_YOUTUBE_REGION}",
