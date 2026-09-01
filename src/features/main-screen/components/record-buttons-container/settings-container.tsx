@@ -164,27 +164,6 @@ export const SettingsContainer: FC<{
           Nastajenja
         </Typography>
 
-        <Tooltip title='Twoje nahrawanja so internje za dalewuwiće spóz. rěče wužiwaja, so pak ženje njewozjewja.'>
-          <span>
-            <FormControlLabel
-              disabled={disabled}
-              control={
-                <Checkbox
-                  checked={settings.sendAudioLogging}
-                  onChange={event =>
-                    onChangeSetting('sendAudioLogging', event.target.checked)
-                  }
-                />
-              }
-              label={<Typography variant='body2'>Mój hłós spožčić</Typography>}
-              sx={{
-                m: 0,
-                minWidth: 0,
-              }}
-            />
-          </span>
-        </Tooltip>
-
         <Box
           sx={{
             display: 'flex',
@@ -219,6 +198,29 @@ export const SettingsContainer: FC<{
             )
           })}
         </Box>
+
+        <Divider />
+
+        <Tooltip title='Twoje nahrawanja so internje za dalewuwiće spóz. rěče wužiwaja, so pak ženje njewozjewja.'>
+          <span>
+            <FormControlLabel
+              disabled={disabled}
+              control={
+                <Checkbox
+                  checked={settings.sendAudioLogging}
+                  onChange={event =>
+                    onChangeSetting('sendAudioLogging', event.target.checked)
+                  }
+                />
+              }
+              label={<Typography variant='body2'>Mój hłós spožčić</Typography>}
+              sx={{
+                m: 0,
+                minWidth: 0,
+              }}
+            />
+          </span>
+        </Tooltip>
 
         {menuTextItems.map(({ key, title, editable, options }) => {
           const setting = settings[key]
