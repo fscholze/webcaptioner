@@ -2,11 +2,13 @@ import { useCallback } from 'react'
 
 const DEFAULT_SPEED = 1
 const MIN_SPEED = 1
-const MAX_SPEED = 1.25
+const MAX_SPEED = 2
 
-const BUFFER_FULL_SECONDS = 8
-const BUFFER_HIGH_SECONDS = 14
-const BUFFER_CRITICAL_SECONDS = 20
+const BUFFER_FULL_SECONDS       = 8
+const BUFFER_HIGH_SECONDS       = 14
+const BUFFER_CRITICAL_SECONDS   = 20
+const BUFFER_EMERGENCY_SECONDS  = 30
+const BUFFER_APOCALYPSE_SECONDS = 45
 
 const WORDS_PER_MINUTE = 150
 
@@ -37,11 +39,22 @@ export const useAdaptiveTtsSpeed = () => {
         return DEFAULT_SPEED
       }
 
-      // Ausnahmefall: es liegt wirklich hörbar viel Audio im Buffer
+      // Ausnahmefall: so viel audio, dass Aufholen erzwungen wird, auf Kosten der Verständlichkeit
+      if (bufferedSeconds >= BUFFER_APOCALYPSE_SECONDS) {
+        return clampSpeed(2)
+      }
+      
+      // Ausnahmefall: so viel audio, dass Verständlichkeit gerade noch so gegeben, aber Aufholen dringend nötig
+      if (bufferedSeconds >= BUFFER_EMERGENCY_SECONDS) {
+        return clampSpeed(1.5)
+      }
+
+      // Ausnahmefall: es liegt wirklich hörbar viel Audio im Buffer, wir sollten uns etwas sputen
       if (bufferedSeconds >= BUFFER_CRITICAL_SECONDS) {
         return clampSpeed(1.25)
       }
 
+      // es hat sich delay aufgebaut, was aber noch durch Sprecherpausen kompensierbar wäre
       if (bufferedSeconds >= BUFFER_HIGH_SECONDS) {
         return clampSpeed(1.15)
       }
