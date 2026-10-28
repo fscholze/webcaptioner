@@ -31,12 +31,23 @@ axiosInstance.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config
+    if (!originalRequest) {
+      return Promise.reject(error)
+    }
 
-    if (
-      error.response?.status === 401 &&
+    const status = error.response?.status
+    const url = originalRequest?.url ?? ''
+    const isAuthAttempt =
+      url.includes('/auth/keycloak/callback') ||
+      url.includes('/auth/login') ||
+      url.includes('/auth/refresh')
+    const canRefresh =
+      !isAuthAttempt &&
+      (status === 401 || status === 403) &&
       !originalRequest._retry &&
       localStorage.getRefreshToken()
-    ) {
+
+    if (canRefresh) {
       originalRequest._retry = true
 
       try {
@@ -44,16 +55,23 @@ axiosInstance.interceptors.response.use(
           refreshToken: localStorage.getRefreshToken(),
         })
 
-        const { token, refreshToken } = response.data
+        const { token, refreshToken, idToken } = response.data
         localStorage.setAccessToken(token)
         localStorage.setRefreshToken(refreshToken)
+        if (idToken) {
+          localStorage.setIdToken(idToken)
+        }
         originalRequest.headers.Authorization = 'Bearer ' + token
 
         return axiosInstance(originalRequest)
       } catch {
         localStorage.deleteAll()
       }
-    } else if (error.response?.status === 401 && !originalRequest._retry) {
+    } else if (
+      !isAuthAttempt &&
+      status === 401 &&
+      !originalRequest._retry
+    ) {
       localStorage.deleteAll()
     }
 

@@ -3,6 +3,9 @@ import { Navigate } from 'react-router-dom'
 
 const LoginWithEmail = lazy(() => import('../features/auth/login-with-email'))
 const Login = lazy(() => import('../features/auth/login'))
+const KeycloakCallback = lazy(
+  () => import('../features/auth/keycloak-callback'),
+)
 const GuestGuard = lazy(() => import('../components/guards/guest-guard'))
 const CastScreen = lazy(() => import('../features/cast-screen'))
 
@@ -23,6 +26,14 @@ export const defaultRoutes = [
         element: (
           <GuestGuard>
             <Login />
+          </GuestGuard>
+        ),
+      },
+      {
+        path: 'callback',
+        element: (
+          <GuestGuard>
+            <KeycloakCallback />
           </GuestGuard>
         ),
       },

@@ -277,6 +277,42 @@ export const useRecording = (
       })
   }
 
+  const applyTranslationResult = async (
+    translation: string,
+    translationTokens: InputWord[] | undefined,
+    playBeep: boolean,
+    timing: { start: Date; stop: Date },
+  ) => {
+    if (settings.autoPlayAudio && options.audioContext) {
+      if (playBeep) {
+        audioQueueService.addBeepToQueue(0.2)
+      } else {
+        playTranslationAudio(translation, settings.selectedSpeakerId)
+      }
+    }
+
+    options.setTranslation(prev => {
+      const normalized = normalizeTranscriptKey(translation)
+      const last = prev[prev.length - 1]
+
+      if (last && normalizeTranscriptKey(last.text) === normalized) {
+        return prev
+      }
+
+      return [
+        ...prev,
+        {
+          text: translation,
+          ...(translationTokens?.length ? { translationTokens } : {}),
+        },
+      ]
+    })
+
+    clearPartialText()
+    flushQueuedTokensForTranslation(translation)
+    await maybeSendYoutubePackages(seqRef.current, translation, timing)
+  }
+
   const onReceiveMessage = async (
     event: MessageEvent,
     recordId: string | undefined,
@@ -370,6 +406,24 @@ export const useRecording = (
             ? settings.libretranslateTargetLanguage
             : settings.translationTargetLanguage
 
+        if (settings.transcriptLanguage === targetLanguage) {
+          await applyTranslationResult(plainText, tokens, false, timing)
+
+          if (recordId) {
+            getTranslation(
+              recordId,
+              plainText,
+              settings.sotraModel,
+              settings.transcriptLanguage,
+              targetLanguage,
+            ).catch(error => {
+              console.error('Error saving same-language transcript:', error)
+            })
+          }
+
+          return
+        }
+
         getTranslation(
           recordId,
           plainText,
@@ -383,39 +437,12 @@ export const useRecording = (
             ? payload.translationTokens
             : undefined
 
-          // Only play audio if autoPlayAudio is enabled AND audioContext is provided
-          if (settings.autoPlayAudio && options.audioContext) {
-            if (payload.playBeep) {
-              audioQueueService.addBeepToQueue(0.2)
-            } else {
-              playTranslationAudio(translation, settings.selectedSpeakerId)
-            }
-          }
-
-          // Save the translation
-          options.setTranslation(prev => {
-            const normalized = normalizeTranscriptKey(translation)
-            const last = prev[prev.length - 1]
-
-            if (last && normalizeTranscriptKey(last.text) === normalized) {
-              return prev
-            }
-
-            return [
-              ...prev,
-              {
-                text: translation,
-                ...(translationTokens?.length ? { translationTokens } : {}),
-              },
-            ]
-          })
-
-          clearPartialText()
-
-          // If tokens arrived before the state update, attach them now.
-          flushQueuedTokensForTranslation(translation)
-
-          await maybeSendYoutubePackages(seqRef.current, translation, timing)
+          await applyTranslationResult(
+            translation,
+            translationTokens,
+            Boolean(payload.playBeep),
+            timing,
+          )
         })
       } else if (parsed.partial !== undefined) {
         applyPartialUpdate(parsed.partial)

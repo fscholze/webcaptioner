@@ -10,7 +10,7 @@ export const getTranslation = async (
   audioRecordId: string | undefined,
   text: string,
   model: SotraModel,
-  sourceLanguage: 'de' | 'hsb' = 'hsb',
+  sourceLanguage: Language = 'hsb',
   targetLanguage:
     | TranslationTargetLanguage
     | LibreTranslateTargetLanguage = 'de',

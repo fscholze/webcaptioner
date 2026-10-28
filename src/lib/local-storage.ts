@@ -14,6 +14,11 @@ const getRefreshToken = () => window.localStorage.getItem('refreshToken')
 const setRefreshToken = (value: string) =>
   window.localStorage.setItem('refreshToken', value)
 
+const getIdToken = () => window.localStorage.getItem('idToken')
+
+const setIdToken = (value: string) =>
+  window.localStorage.setItem('idToken', value)
+
 const getCounterForYoutubeStreaming = (streamingKey: string) => {
   const value = window.localStorage.getItem(`counter-${streamingKey}`)
   return value ? parseInt(value) : 0
@@ -26,6 +31,7 @@ const deleteAll = () => {
   window.localStorage.removeItem('isAuthenticated')
   window.localStorage.removeItem('accessToken')
   window.localStorage.removeItem('refreshToken')
+  window.localStorage.removeItem('idToken')
 }
 
 export const localStorage = {
@@ -35,6 +41,8 @@ export const localStorage = {
   setAccessToken,
   getRefreshToken,
   setRefreshToken,
+  getIdToken,
+  setIdToken,
   deleteAll,
   getCounterForYoutubeStreaming,
   setCounterForYoutubeStreaming,
