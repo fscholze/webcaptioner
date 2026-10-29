@@ -13,6 +13,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { toast } from 'sonner'
 import useAuth from '../../hooks/use-auth'
 import { axiosInstance } from '../../lib/axios'
+import { consumeKeycloakLoginError } from '../../lib/keycloak-login-error'
 
 const LoginWithEmailScreen: FC = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -22,6 +23,11 @@ const LoginWithEmailScreen: FC = () => {
   const [keycloakEnabled, setKeycloakEnabled] = useState<boolean | null>(null)
 
   const { login, startKeycloakLogin } = useAuth()
+
+  useEffect(() => {
+    const message = consumeKeycloakLoginError()
+    if (message) toast.error(message)
+  }, [])
 
   useEffect(() => {
     axiosInstance

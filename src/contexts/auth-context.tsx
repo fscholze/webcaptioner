@@ -141,18 +141,26 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         throw new Error('Invalid login state')
       }
 
-      const response = await axiosInstance.post('/auth/keycloak/callback', {
-        code,
-        redirectUri: stored.redirectUri,
-        codeVerifier: stored.codeVerifier,
-      })
+      try {
+        const response = await axiosInstance.post('/auth/keycloak/callback', {
+          code,
+          redirectUri: stored.redirectUri,
+          codeVerifier: stored.codeVerifier,
+        })
 
-      window.sessionStorage.removeItem(KEYCLOAK_AUTH_KEY)
-      const { token, refreshToken, idToken } = response.data
-      storeSession(token, refreshToken, idToken)
-      const authenticated = await getMe()
-      if (!authenticated) {
-        throw new Error('Not authenticated')
+        window.sessionStorage.removeItem(KEYCLOAK_AUTH_KEY)
+        const { token, refreshToken, idToken } = response.data
+        storeSession(token, refreshToken, idToken)
+        const authenticated = await getMe()
+        if (!authenticated) {
+          throw new Error('Not authenticated')
+        }
+      } catch (error) {
+        window.sessionStorage.removeItem(KEYCLOAK_AUTH_KEY)
+        localStorage.deleteAll()
+        setIsAuthenticated(false)
+        setUser(null)
+        throw error
       }
     },
     [getMe],

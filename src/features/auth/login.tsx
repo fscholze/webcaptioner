@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import {
   TextField,
   InputAdornment,
@@ -11,12 +11,18 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { toast } from 'sonner'
 import useAuth from '../../hooks/use-auth'
+import { consumeKeycloakLoginError } from '../../lib/keycloak-login-error'
 
 const LoginScreen: FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const { loginFree } = useAuth()
 
   const [password, setPassword] = useState('')
+
+  useEffect(() => {
+    const message = consumeKeycloakLoginError()
+    if (message) toast.error(message)
+  }, [])
 
   const onLogin = () => {
     loginFree(password).catch(() => toast.error('Wopačne tajne hesło'))

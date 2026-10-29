@@ -1,12 +1,35 @@
 import { FC, useEffect, useState } from 'react'
 import { Box, Button, CircularProgress, Container, Typography } from '@mui/material'
+import axios from 'axios'
 import useAuth from '../../hooks/use-auth'
+import { storeKeycloakLoginError } from '../../lib/keycloak-login-error'
+
+const fallbackError = 'Přizjewjenje njeje so poradźiło'
+
+const readLoginError = (error: unknown) => {
+  if (!axios.isAxiosError(error)) {
+    return { message: fallbackError, logoutUrl: undefined }
+  }
+
+  const data = error.response?.data as
+    | { message?: unknown; logoutUrl?: unknown }
+    | undefined
+  const message =
+    typeof data?.message === 'string' && data.message.trim()
+      ? data.message
+      : fallbackError
+  const logoutUrl =
+    typeof data?.logoutUrl === 'string' ? data.logoutUrl : undefined
+
+  return { message, logoutUrl }
+}
 
 const loginAttempts = new Map<string, Promise<void>>()
 
 const KeycloakCallback: FC = () => {
   const { completeKeycloakLogin } = useAuth()
   const [error, setError] = useState<string | null>(null)
+  const [logoutUrl, setLogoutUrl] = useState<string | undefined>()
 
   useEffect(() => {
     let active = true
@@ -16,7 +39,7 @@ const KeycloakCallback: FC = () => {
     const oauthError = params.get('error')
 
     if (oauthError || !code || !state) {
-      setError('Přizjewjenje njeje so poradźiło')
+      setError(fallbackError)
       return
     }
 
@@ -26,9 +49,17 @@ const KeycloakCallback: FC = () => {
       loginAttempts.set(code, attempt)
     }
 
-    attempt.catch(() => {
+    attempt.catch((loginError: unknown) => {
       loginAttempts.delete(code)
-      if (active) setError('Přizjewjenje njeje so poradźiło')
+      if (!active) return
+      const result = readLoginError(loginError)
+      if (result.logoutUrl) {
+        storeKeycloakLoginError(result.message)
+        window.location.replace(result.logoutUrl)
+        return
+      }
+      setLogoutUrl(result.logoutUrl)
+      setError(result.message)
     })
 
     return () => {
@@ -56,7 +87,11 @@ const KeycloakCallback: FC = () => {
               fullWidth
               size='large'
               variant='contained'
-              href='/authentication/login-with-email'
+              onClick={() => {
+                window.location.assign(
+                  logoutUrl ?? '/authentication/login-with-email',
+                )
+              }}
             >
               Znowa spytać
             </Button>
