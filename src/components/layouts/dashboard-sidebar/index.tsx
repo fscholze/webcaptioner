@@ -7,8 +7,8 @@ import {
   Avatar,
   Typography,
   Drawer,
+  ListItemButton,
   ListItemIcon,
-  MenuItem,
 } from '@mui/material'
 import { adminSections } from './sections/admin-sections'
 import NavSection from './nav-section'
@@ -124,12 +124,12 @@ const DashboardSidebar: FC<{
           ))}
         </Box>
       </Box>
-      <MenuItem onClick={onSignOut} sx={{ color: 'var(--text-primary)' }}>
+      <ListItemButton onClick={onSignOut} sx={{ color: 'var(--text-primary)' }}>
         <ListItemIcon sx={{ color: 'inherit' }}>
           <Logout fontSize='small' />
         </ListItemIcon>
         <Typography>Logout</Typography>
-      </MenuItem>
+      </ListItemButton>
     </Box>
   )
 
