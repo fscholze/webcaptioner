@@ -210,8 +210,8 @@ export const MainContent = ({
                 [{t.counter}]: {t.successfull ? '✅' : '❌'}{' '}
                 {dayjs(t.timestamp).tz(dayjs.tz.guess()).format('HH:mm:ss:SSS')}{' '}
                 <Typography
-                  display='inline'
                   sx={{
+                    display: 'inline',
                     color: !t.timestampDiff
                       ? 'var(--text-primary)'
                       : Math.abs(t.timestampDiff) < 20

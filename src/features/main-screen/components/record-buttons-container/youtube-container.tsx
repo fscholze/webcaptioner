@@ -128,24 +128,26 @@ export const YoutubeContainer: FC<{
                 streamingKey: event.target.value,
               }))
             }
-            InputProps={{
-              endAdornment: Boolean(tempSettings.streamingKey) && (
-                <InputAdornment position='end'>
-                  <IconButton
-                    edge='end'
-                    disabled={disabled}
-                    aria-label='Streamschlüssel löschen'
-                    onClick={() =>
-                      setTempSettings(prev => ({
-                        ...prev,
-                        streamingKey: '',
-                      }))
-                    }
-                  >
-                    <Clear />
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                endAdornment: Boolean(tempSettings.streamingKey) && (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      edge='end'
+                      disabled={disabled}
+                      aria-label='Streamschlüssel löschen'
+                      onClick={() =>
+                        setTempSettings(prev => ({
+                          ...prev,
+                          streamingKey: '',
+                        }))
+                      }
+                    >
+                      <Clear />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>

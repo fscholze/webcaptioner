@@ -351,9 +351,9 @@ const HistoryScreen = () => {
                       <Stack
                         direction='row'
                         spacing={0.35}
-                        alignItems='center'
-                        justifyContent='center'
                         sx={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
                           flexWrap: 'nowrap',
                           whiteSpace: 'nowrap',
                           minWidth: 'max-content',
@@ -451,10 +451,12 @@ const HistoryScreen = () => {
         onClose={() => {
           if (!isDeleting) setRecordToDelete(null)
         }}
-        PaperProps={{
-          sx: {
-            bgcolor: 'background.paper',
-            color: 'text.primary',
+        slotProps={{
+          paper: {
+            sx: {
+              bgcolor: 'background.paper',
+              color: 'text.primary',
+            },
           },
         }}
       >

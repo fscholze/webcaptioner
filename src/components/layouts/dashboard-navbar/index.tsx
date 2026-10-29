@@ -1,8 +1,8 @@
 import {
-  experimentalStyled,
+  styled,
   AppBar,
+  Box,
   Toolbar,
-  Hidden,
   IconButton,
   AppBarProps,
 } from '@mui/material'
@@ -18,7 +18,7 @@ interface DashboardNavbarProps extends AppBarProps {
   navigate: NavigateFunction
 }
 
-const DashboardNavbarRoot = experimentalStyled(AppBar)(({ theme }) => ({
+const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: 'var(--bg-primary)',
   borderBottom: '1px solid var(--border-color)',
   boxShadow: 'none',
@@ -39,14 +39,14 @@ const DashboardNavbar: FC<DashboardNavbarProps> = props => {
           flexDirection: 'row',
         }}
       >
-        <Hidden lgUp>
+        <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
           <IconButton
             onClick={onSidebarMobileOpen}
             sx={{ color: 'var(--accent-color)' }}
           >
             <MenuIcon />
           </IconButton>
-        </Hidden>
+        </Box>
 
         <ThemeToggle />
       </Toolbar>

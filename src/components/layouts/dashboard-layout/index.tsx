@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import type { FC, ReactNode } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { experimentalStyled } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import DashboardNavbar from '../dashboard-navbar'
 import DashboardSidebar from '../dashboard-sidebar'
 import { NAVBAR_HEIGHT } from '../constants'
 import useAuth from '../../../hooks/use-auth'
 
-const DashboardLayoutRoot = experimentalStyled('div')(() => ({
+const DashboardLayoutRoot = styled('div')(() => ({
   backgroundColor: 'var(--bg-primary)',
   display: 'flex',
   height: '100vh',
@@ -15,7 +15,7 @@ const DashboardLayoutRoot = experimentalStyled('div')(() => ({
   width: '100vw',
 }))
 
-const DashboardLayoutWrapper = experimentalStyled('div', {
+const DashboardLayoutWrapper = styled('div', {
   shouldForwardProp: (prop: string) => prop[0] !== '$',
 })<{ $ishidden: boolean }>(({ $ishidden, theme }) => ({
   display: 'flex',
@@ -28,13 +28,13 @@ const DashboardLayoutWrapper = experimentalStyled('div', {
   },
 }))
 
-const DashboardLayoutContainer = experimentalStyled('div')({
+const DashboardLayoutContainer = styled('div')({
   display: 'flex',
   flex: '1 1 auto',
   overflow: 'hidden',
 })
 
-const DashboardLayoutContent = experimentalStyled('div')({
+const DashboardLayoutContent = styled('div')({
   flex: '1 1 auto',
   height: '100%',
   overflow: 'auto',

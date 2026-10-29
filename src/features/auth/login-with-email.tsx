@@ -127,19 +127,21 @@ const LoginWithEmailScreen: FC = () => {
             backgroundColor: 'var(--input-bg)',
             borderRadius: 2,
           }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton
-                  aria-label='toggle password visibility'
-                  onClick={() => setShowPassword(!showPassword)}
-                  onMouseDown={() => setShowPassword(!showPassword)}
-                  edge='end'
-                >
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label='toggle password visibility'
+                    onClick={() => setShowPassword(!showPassword)}
+                    onMouseDown={() => setShowPassword(!showPassword)}
+                    edge='end'
+                  >
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
           }}
         />
 

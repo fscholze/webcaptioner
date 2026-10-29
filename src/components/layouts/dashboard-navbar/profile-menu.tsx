@@ -28,7 +28,8 @@ export const ProfileMenu: FC<{
     open={isOpen}
     onClose={handleClose}
     onClick={handleClose}
-    PaperProps={{
+    slotProps={{
+      paper: {
       elevation: 0,
       sx: {
         overflow: 'visible',
@@ -52,6 +53,7 @@ export const ProfileMenu: FC<{
           transform: 'translateY(-50%) rotate(45deg)',
           zIndex: 0,
         },
+      },
       },
     }}
     transformOrigin={{ horizontal: 'right', vertical: 'top' }}

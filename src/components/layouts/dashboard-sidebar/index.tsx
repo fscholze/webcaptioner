@@ -4,7 +4,6 @@ import type { FC } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import {
   Box,
-  Hidden,
   Avatar,
   Typography,
   Drawer,
@@ -136,41 +135,45 @@ const DashboardSidebar: FC<{
 
   return (
     <>
-      <Hidden lgUp>
+      <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
         <Drawer
           anchor='left'
           onClose={onMobileClose}
           open={openMobile}
-          PaperProps={{
-            sx: {
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              width: 280,
+          slotProps={{
+            paper: {
+              sx: {
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--text-primary)',
+                width: 280,
+              },
             },
           }}
           variant='temporary'
         >
           {content}
         </Drawer>
-      </Hidden>
-      <Hidden lgDown>
+      </Box>
+      <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
         <Drawer
           anchor='left'
           open
-          PaperProps={{
-            sx: {
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              height: `calc(100% - ${NAVBAR_HEIGHT - 7}) !important`,
-              top: NAVBAR_HEIGHT - 7,
-              width: 280,
+          slotProps={{
+            paper: {
+              sx: {
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--text-primary)',
+                height: `calc(100% - ${NAVBAR_HEIGHT - 7}) !important`,
+                top: NAVBAR_HEIGHT - 7,
+                width: 280,
+              },
             },
           }}
           variant='persistent'
         >
           {content}
         </Drawer>
-      </Hidden>
+      </Box>
     </>
   )
 }

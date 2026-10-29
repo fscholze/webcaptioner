@@ -160,7 +160,7 @@ export const SettingsContainer: FC<{
           minWidth: 0,
         }}
       >
-        <Typography variant='body1' textAlign='right'>
+        <Typography variant='body1' sx={{ textAlign: 'right' }}>
           Nastajenja
         </Typography>
 

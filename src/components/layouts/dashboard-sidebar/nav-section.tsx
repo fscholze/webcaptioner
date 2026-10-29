@@ -1,5 +1,5 @@
 import { ListProps, List } from '@mui/material'
-import type { FC, ReactNode } from 'react'
+import type { FC, JSX, ReactNode } from 'react'
 import { matchPath } from 'react-router-dom'
 import NavItem from './nav-item'
 
