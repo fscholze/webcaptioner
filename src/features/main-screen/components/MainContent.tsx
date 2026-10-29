@@ -12,7 +12,10 @@ import { QRCode } from './qr-code'
 import { useState } from 'react'
 import { createAudioRecord } from '../../../lib/server-manager'
 import { SpellCheckedText } from '../../cast-screen/components/spell-checked-text'
-import { createTranscriptLine } from '../../../types/transcript'
+import {
+  createTranscriptLine,
+  extractTranslationText,
+} from '../../../types/transcript'
 import { shouldShowPartialForDisplay, isRedundantPlainTranslationLine } from '../../../helper/partial-transcript'
 
 const MAIN_SCREEN_FONT_SIZE = 16
@@ -47,10 +50,13 @@ type MainContentProps = {
 }
 
 const asTranscriptLine = (value: unknown) => {
-  const record = value as any
-  const text = typeof record?.text === 'string' ? record.text : String(value)
+  const record =
+    typeof value === 'object' && value !== null
+      ? (value as Record<string, unknown>)
+      : undefined
+
   return createTranscriptLine(
-    text,
+    extractTranslationText(value),
     record?.translationTokens,
     record?.tokens,
     record?.result,
@@ -239,7 +245,7 @@ export const MainContent = ({
           <Button
             onClick={() =>
               download(
-                translation.map(t => t.text),
+                translation.map(t => extractTranslationText(t)),
                 'prelozk',
               )
             }

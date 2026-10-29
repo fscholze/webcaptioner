@@ -18,6 +18,7 @@ import { InputLine, TranslationResponse, YoutubeSettings } from '../types'
 import { audioQueueService } from '../../../services/AudioQueueService'
 import {
   InputWord,
+  extractTranslationText,
   normalizeTranscriptText,
   normalizeTranscriptKey,
 } from '../../../types/transcript'
@@ -430,20 +431,34 @@ export const useRecording = (
           settings.sotraModel,
           settings.transcriptLanguage === 'de' ? 'de' : 'hsb',
           targetLanguage,
-        ).then(async response => {
-          const payload = response.data
-          const translation = payload.translation
-          const translationTokens = Array.isArray(payload.translationTokens)
-            ? payload.translationTokens
-            : undefined
+        )
+          .then(async response => {
+            const payload =
+              response.data && typeof response.data === 'object'
+                ? response.data
+                : undefined
+            const translation = extractTranslationText(response.data)
 
-          await applyTranslationResult(
-            translation,
-            translationTokens,
-            Boolean(payload.playBeep),
-            timing,
-          )
-        })
+            if (!translation) {
+              toast.error('Přełožk njebe wuspěšny.')
+              return
+            }
+
+            const translationTokens = Array.isArray(payload?.translationTokens)
+              ? payload.translationTokens
+              : undefined
+
+            await applyTranslationResult(
+              translation,
+              translationTokens,
+              Boolean(payload?.playBeep),
+              timing,
+            )
+          })
+          .catch(error => {
+            console.error('Error translating:', error)
+            toast.error('Přełožk njebe wuspěšny.')
+          })
       } else if (parsed.partial !== undefined) {
         applyPartialUpdate(parsed.partial)
       }

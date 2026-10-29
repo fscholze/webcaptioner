@@ -30,11 +30,56 @@ export const normalizeTranscriptKey = (text: unknown): string => {
   return normalized.replace(/\s+/g, ' ').toLowerCase()
 }
 
+const TRANSLATION_TEXT_KEYS = [
+  'translation',
+  'marked_translation',
+  'translatedText',
+  'translated_text',
+  'text',
+  'plain',
+  'output',
+  'output_html',
+] as const
+
+export const extractTranslationText = (value: unknown, depth = 0): string => {
+  if (depth > 5 || value == null) return ''
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (!trimmed) return ''
+    if (trimmed.startsWith('<!DOCTYPE') || trimmed.startsWith('<html')) return ''
+    return trimmed
+  }
+
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value)
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map(item => extractTranslationText(item, depth + 1))
+      .filter(Boolean)
+      .join(' ')
+      .trim()
+  }
+
+  if (typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    for (const key of TRANSLATION_TEXT_KEYS) {
+      if (record[key] == null) continue
+      const extracted = extractTranslationText(record[key], depth + 1)
+      if (extracted) return extracted
+    }
+  }
+
+  return ''
+}
+
 export const createTranscriptLine = (
   text: unknown,
   ...tokenSources: unknown[]
 ): TranscriptLine => {
-  const plain = typeof text === 'string' ? text : String(text ?? '')
+  const plain = extractTranslationText(text)
 
   for (const tokenSource of tokenSources) {
     const tokens = normalizeInputWords(tokenSource)
